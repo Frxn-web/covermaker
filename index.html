@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Cartas de Presentación IA (v5.3)</title>
+    <title>Generador de Cartas de Presentación IA (v5.4)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
@@ -19,6 +19,7 @@
         .slider-track { height: 4px; }
         .slider-thumb { width: 1.25rem; height: 1.25rem; }
         .ad-placeholder { background-color: #f3f4f6; border: 2px dashed #d1d5db; display: flex; align-items: center; justify-content: center; text-align: center; color: #6b7280; font-size: 0.875rem; }
+        .notification { transition: opacity 0.3s; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -53,6 +54,7 @@
                 <main id="app-container">
                     <!-- Pasos de la aplicación aquí... -->
                     <div id="step-1" class="bg-white p-6 sm:p-8 rounded-xl shadow-lg">
+                        <div id="notification-1" class="notification hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-lg"></div>
                         <h2 class="text-2xl font-bold mb-6" data-lang-key="step1_title">Paso 1: Tu Información</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
@@ -68,11 +70,12 @@
                             </div>
                         </div>
                         <div class="mt-8 text-right">
-                            <button onclick="nextStep(2)" class="bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700" data-lang-key="next_button">Siguiente</button>
+                            <button onclick="validateAndGoTo(2)" class="bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700" data-lang-key="next_button">Siguiente</button>
                         </div>
                     </div>
 
                     <div id="step-2" class="bg-white p-6 sm:p-8 rounded-xl shadow-lg hidden">
+                        <div id="notification-2" class="notification hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-lg"></div>
                         <h2 class="text-2xl font-bold mb-6" data-lang-key="step2_title">Paso 2: La Oferta de Trabajo</h2>
                         <div class="mb-6">
                             <label for="jobTitle" class="block text-lg font-semibold mb-2" data-lang-key="job_title_label">Puesto al que Aplicas</label>
@@ -91,20 +94,23 @@
                             <input type="file" id="cvFile" accept=".pdf" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
                             <p id="cv-status" class="text-sm text-green-600 mt-2 font-medium"></p>
                         </div>
-                        <div class="mb-6 gemini-feature p-4 rounded-lg">
-                            <h3 class="font-bold text-indigo-800" data-lang-key="cv_analysis_title">Análisis Comparativo IA</h3>
-                            <p class="text-sm text-indigo-700 mb-2" data-lang-key="cv_analysis_desc">Compara tu CV con la oferta para identificar coincidencias y brechas.</p>
-                            <button onclick="analyzeCvVsJd()" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700" data-lang-key="analyze_cv_jd_button">🧠 Analizar CV vs. Oferta</button>
-                            <div id="cvJdAnalysisResult" class="mt-4 text-sm hidden"></div>
-                        </div>
                         <div class="mt-8 flex justify-between">
                             <button onclick="prevStep(1)" class="bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg" data-lang-key="prev_button">Anterior</button>
-                            <button onclick="nextStep(3)" class="bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg" data-lang-key="next_button">Siguiente</button>
+                            <button onclick="validateAndGoTo(3)" class="bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg" data-lang-key="next_button">Siguiente</button>
                         </div>
                     </div>
 
                     <div id="step-3" class="bg-white p-6 sm:p-8 rounded-xl shadow-lg hidden">
+                        <div id="notification-3" class="notification hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-lg"></div>
                         <h2 class="text-2xl font-bold mb-6" data-lang-key="step3_title">Paso 3: Tu Valor y Tono</h2>
+                        
+                        <div class="gemini-feature p-4 rounded-lg mb-6">
+                            <h3 class="font-bold text-indigo-800" data-lang-key="cv_extract_title">Extracción de Datos con IA</h3>
+                            <p class="text-sm text-indigo-700 mb-2" data-lang-key="cv_extract_desc">Si subiste un CV, usa la IA para rellenar tus puntos fuertes y logros automáticamente.</p>
+                            <button onclick="extractFromCv()" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700" data-lang-key="cv_extract_button">✨ Extraer Datos del CV</button>
+                            <div id="cvExtractResult" class="mt-4 text-sm hidden"></div>
+                        </div>
+
                         <div class="mb-6">
                             <label for="strengths" class="block text-lg font-semibold mb-2" data-lang-key="strengths_label">Tus Puntos Fuertes</label>
                             <textarea id="strengths" rows="3" class="w-full p-3 border border-gray-300 rounded-lg"></textarea>
@@ -198,8 +204,8 @@
     </div>
 
     <script>
-    // --- V5.3 ---
-    // Añadido bloque de comentarios para la API Key.
+    // --- V5.4 ---
+    // Añadida extracción de datos desde CV y notificaciones en lugar de alertas.
     
     // --- Estado y Configuración ---
     let currentStep = 1;
@@ -230,9 +236,9 @@
             company_data: "Nombre de la Empresa",
             job_desc_label: "Descripción del Puesto",
             upload_cv_label: "Sube tu CV (PDF)",
-            cv_analysis_title: "Análisis Comparativo IA",
-            cv_analysis_desc: "Compara tu CV con la oferta para identificar coincidencias y brechas.",
-            analyze_cv_jd_button: "🧠 Analizar CV vs. Oferta",
+            cv_extract_title: "Extracción de Datos con IA",
+            cv_extract_desc: "Si subiste un CV, usa la IA para rellenar tus puntos fuertes y logros automáticamente.",
+            cv_extract_button: "✨ Extraer Datos del CV",
             step3_title: "Paso 3: Tu Valor y Tono",
             strengths_label: "Tus Puntos Fuertes",
             experience_label: "Tus Logros Clave",
@@ -254,9 +260,10 @@
             cv_success: "✅ CV cargado y analizado.",
             cv_error: "Error al procesar el PDF.",
             cv_select_pdf: "Selecciona un archivo PDF.",
-            jd_alert: "Pega primero la descripción del puesto.",
-            cv_alert: "Sube primero tu CV.",
-            jd_analyzing: "Analizando...",
+            cv_extract_error: "Sube tu CV primero para usar esta función.",
+            cv_extract_success: "Datos extraídos. Por favor, revísalos y ajústalos si es necesario.",
+            validation_error_step1: "Por favor, introduce tu nombre completo.",
+            validation_error_step2: "Por favor, completa el título del puesto y la descripción.",
             error_prefix: "Error: ",
             copied_alert: "¡Texto copiado!",
             copy_error_alert: "No se pudo copiar.",
@@ -283,9 +290,9 @@
             company_data: "Company Name",
             job_desc_label: "Job Description",
             upload_cv_label: "Upload Your CV (PDF)",
-            cv_analysis_title: "AI Comparative Analysis",
-            cv_analysis_desc: "Compare your CV against the job offer to find matches and gaps.",
-            analyze_cv_jd_button: "🧠 Analyze CV vs. Job",
+            cv_extract_title: "AI Data Extraction",
+            cv_extract_desc: "If you uploaded a CV, use AI to automatically fill in your strengths and achievements.",
+            cv_extract_button: "✨ Extract Data from CV",
             step3_title: "Step 3: Your Value & Tone",
             strengths_label: "Your Key Strengths",
             experience_label: "Your Key Achievements",
@@ -307,9 +314,10 @@
             cv_success: "✅ CV successfully loaded and analyzed.",
             cv_error: "Error processing PDF.",
             cv_select_pdf: "Please select a PDF file.",
-            jd_alert: "Please paste the job description first.",
-            cv_alert: "Please upload your CV first.",
-            jd_analyzing: "Analyzing...",
+            cv_extract_error: "Upload your CV first to use this feature.",
+            cv_extract_success: "Data extracted. Please review and adjust if necessary.",
+            validation_error_step1: "Please enter your full name.",
+            validation_error_step2: "Please complete the job title and description.",
             error_prefix: "Error: ",
             copied_alert: "Text copied!",
             copy_error_alert: "Could not copy.",
@@ -336,6 +344,48 @@
     }
 
     document.getElementById('lang-toggle').addEventListener('change', (e) => setLanguage(e.target.checked ? 'en' : 'es'));
+
+    function showNotification(step, message, isError = true) {
+        const notificationEl = document.getElementById(`notification-${step}`);
+        if (!notificationEl) return;
+        notificationEl.textContent = message;
+        notificationEl.classList.remove('hidden');
+        notificationEl.classList.toggle('bg-red-100', isError);
+        notificationEl.classList.toggle('border-red-500', isError);
+        notificationEl.classList.toggle('text-red-700', isError);
+        notificationEl.classList.toggle('bg-green-100', !isError);
+        notificationEl.classList.toggle('border-green-500', !isError);
+        notificationEl.classList.toggle('text-green-700', !isError);
+    }
+
+    function hideNotification(step) {
+        const notificationEl = document.getElementById(`notification-${step}`);
+        if (notificationEl) notificationEl.classList.add('hidden');
+    }
+
+    function validateAndGoTo(nextStepNum) {
+        hideNotification(currentStep);
+        let isValid = true;
+        let errorMessage = '';
+
+        if (currentStep === 1) {
+            if (!document.getElementById('fullName').value.trim()) {
+                isValid = false;
+                errorMessage = uiStrings[currentLanguage].validation_error_step1;
+            }
+        } else if (currentStep === 2) {
+            if (!document.getElementById('jobTitle').value.trim() || !document.getElementById('jobDescription').value.trim()) {
+                isValid = false;
+                errorMessage = uiStrings[currentLanguage].validation_error_step2;
+            }
+        }
+
+        if (isValid) {
+            showStep(nextStepNum);
+        } else {
+            showNotification(currentStep, errorMessage);
+        }
+    }
 
     function updateStepIndicator(step) {
         for (let i = 1; i <= 4; i++) {
@@ -365,7 +415,6 @@
         window.scrollTo(0, 0);
     }
 
-    function nextStep(step) { showStep(step); }
     function prevStep(step) { showStep(step); }
 
     function startOver() {
@@ -376,17 +425,19 @@
             if(el) el.value = '';
         });
         document.getElementById('cv-status').textContent = '';
-        document.getElementById('cvJdAnalysisResult').classList.add('hidden');
+        hideNotification(1);
+        hideNotification(2);
+        hideNotification(3);
         showStep(1);
     }
 
     // --- Lógica de Datos (localStorage) ---
     function saveState() {
-        localStorage.setItem('careerAssistantData', JSON.stringify(appData));
+        localStorage.setItem('careerAssistantData_v5', JSON.stringify(appData));
     }
 
     function loadState() {
-        const savedData = localStorage.getItem('careerAssistantData');
+        const savedData = localStorage.getItem('careerAssistantData_v5');
         if (savedData) {
             appData = JSON.parse(savedData);
         }
@@ -442,8 +493,8 @@
 
     // --- Historial ---
     function addToHistory(letterData) {
-        appData.history.unshift(letterData); // Añadir al principio
-        if (appData.history.length > 20) appData.history.pop(); // Limitar a 20 items
+        appData.history.unshift(letterData);
+        if (appData.history.length > 20) appData.history.pop();
         updateHistoryList();
         saveState();
     }
@@ -476,7 +527,6 @@
         const item = appData.history[index];
         if (item) {
             startOver();
-            // Cargar datos en los campos
             document.getElementById('fullName').value = item.inputs.fullName;
             document.getElementById('contactInfo').value = item.inputs.contactInfo;
             document.getElementById('jobTitle').value = item.jobTitle;
@@ -529,13 +579,7 @@
             resultDiv.classList.remove('hidden');
         }
 
-        // --- PASO CRÍTICO: INSERTA TU API KEY AQUÍ ---
-        // 1. Obtén tu clave gratuita desde https://aistudio.google.com/app/apikey
-        // 2. Reemplaza "YOUR_API_KEY_HERE" con tu clave.
-        //    Debe quedar así: const apiKey = "AIzaSy...tu_clave_aqui...";
-        // -----------------------------------------------------------------
         const apiKey = "AIzaSyB-Bp2nEH0_srXgIzjizeQuiBLBF63oWZY"; 
-
         if (apiKey === "YOUR_API_KEY_HERE") {
             throw new Error("API Key not configured. Please add your Google AI Studio API Key to the code.");
         }
@@ -556,19 +600,27 @@
             throw error;
         }
     }
-
-    async function analyzeCvVsJd() {
-        const jobDesc = document.getElementById('jobDescription').value;
+    
+    async function extractFromCv() {
         const cvText = appData.currentInputs.cvText;
-        if (!jobDesc) { alert(uiStrings[currentLanguage].jd_alert); return; }
-        if (!cvText) { alert(uiStrings[currentLanguage].cv_alert); return; }
+        if (!cvText) {
+            showNotification(3, uiStrings[currentLanguage].cv_extract_error);
+            return;
+        }
+        hideNotification(3);
+        const resultDiv = document.getElementById('cvExtractResult');
 
-        const prompt = `Act as an expert HR analyst. Compare the following CV with the Job Description. Provide a brief report in ${currentLanguage === 'es' ? 'Spanish' : 'English'} with three sections: "✅ Coincidencias Clave" (Key Matches), "⚠️ Posibles Brechas" (Potential Gaps), and "🔑 Palabras Clave Sugeridas" (Suggested Keywords). Be concise and direct.\n\n---CV---\n${cvText}\n\n---Job Description---\n${jobDesc}`;
-        
+        const prompt = `Act as an HR expert. Read the following CV text and extract the candidate's key strengths and quantifiable achievements. Format the output as a JSON object with two keys: "strengths" (a string summarizing top skills) and "achievements" (a string summarizing key results, preferably with numbers). The response must be in ${currentLanguage === 'es' ? 'Spanish' : 'English'}. CV Text: \n\n${cvText}`;
+
         try {
-            const resultText = await callGemini(prompt, 'cvJdAnalysisResult');
-            document.getElementById('cvJdAnalysisResult').innerHTML = resultText.replace(/\n/g, '<br>').replace(/✅/g, '<br><strong>✅').replace(/⚠️/g, '<br><strong>⚠️').replace(/🔑/g, '<br><strong>🔑');
-        } catch (e) { /* error handled in callGemini */ }
+            const resultText = await callGemini(prompt, 'cvExtractResult');
+            const resultJson = JSON.parse(resultText.replace(/```json\n?/, '').replace(/```$/, ''));
+            document.getElementById('strengths').value = resultJson.strengths || '';
+            document.getElementById('experience').value = resultJson.achievements || '';
+            resultDiv.textContent = uiStrings[currentLanguage].cv_extract_success;
+        } catch (e) {
+             if(resultDiv) resultDiv.innerHTML = `${uiStrings[currentLanguage].error_prefix}${e.message}`;
+        }
     }
 
     async function generateCoverLetter() {
@@ -588,7 +640,11 @@
         };
         appData.currentInputs = {...appData.currentInputs, ...inputs};
 
-        if (!inputs.jobTitle || !inputs.jobDescription) { alert(uiStrings[currentLanguage].jd_alert); return; }
+        if (!inputs.jobTitle || !inputs.jobDescription) {
+            showNotification(3, uiStrings[currentLanguage].validation_error_step2);
+            return;
+        }
+        hideNotification(3);
 
         document.getElementById('step-3').classList.add('hidden');
         document.getElementById('loading').classList.remove('hidden');
@@ -625,7 +681,7 @@
             showStep(4);
         } catch (e) {
             console.error("Error generating cover letter:", e);
-            alert(`${uiStrings[currentLanguage].error_prefix}${e.message}`);
+            showNotification(3, `${uiStrings[currentLanguage].error_prefix}${e.message}`);
             showStep(3);
         } finally {
             document.getElementById('loading').classList.add('hidden');
