@@ -1,337 +1,337 @@
-!DOCTYPE html
-html lang=es
-head
-    meta charset=UTF-8
-    meta name=viewport content=width=device-width, initial-scale=1.0
-    titleGenerador de Cartas de Presentación IA (v4)title
-    script src=httpscdn.tailwindcss.comscript
-    link href=httpsfonts.googleapis.comcss2family=Interwght@400;500;600;700&display=swap rel=stylesheet
-    script src=httpscdnjs.cloudflare.comajaxlibspdf.js2.11.338pdf.min.jsscript
-    script src=httpscdnjs.cloudflare.comajaxlibsjspdf2.5.1jspdf.umd.min.jsscript
-    style
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Cartas de Presentación IA (v4)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
         body {
-            font-family 'Inter', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
-        pdfjsLib.GlobalWorkerOptions.workerSrc = `httpscdnjs.cloudflare.comajaxlibspdf.js2.11.338pdf.worker.min.js`;
+        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js`;
         .step-indicator {
-            transition all 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
         }
         .gemini-feature {
-            border-left 4px solid #4f46e5;  Indigo-600 
-            background-color #eef2ff;  Indigo-50 
+            border-left: 4px solid #4f46e5; /* Indigo-600 */
+            background-color: #eef2ff; /* Indigo-50 */
         }
-         Estilos para el toggle de idioma 
+        /* Estilos para el toggle de idioma */
         .lang-toggle-label {
-            width 80px;
-            height 34px;
-            background-color #e5e7eb;  gray-200 
-            border-radius 9999px;
-            cursor pointer;
-            display flex;
-            align-items center;
-            justify-content space-around;
-            position relative;
-            transition background-color 0.3s;
+            width: 80px;
+            height: 34px;
+            background-color: #e5e7eb; /* gray-200 */
+            border-radius: 9999px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            position: relative;
+            transition: background-color 0.3s;
         }
         .lang-toggle-label .ball {
-            width 30px;
-            height 30px;
-            background-color white;
-            border-radius 50%;
-            position absolute;
-            top 2px;
-            left 2px;
-            transition transform 0.3s ease;
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
         }
-        #lang-togglechecked + .lang-toggle-label .ball {
-            transform translateX(46px);
+        #lang-toggle:checked + .lang-toggle-label .ball {
+            transform: translateX(46px);
         }
-        #lang-togglechecked + .lang-toggle-label {
-            background-color #4f46e5;  Indigo-600 
+        #lang-toggle:checked + .lang-toggle-label {
+            background-color: #4f46e5; /* Indigo-600 */
         }
-    style
-head
-body class=bg-gray-50 text-gray-800
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
 
-    div class=container mx-auto p-4 smp-6 mdp-8 max-w-4xl
-        header class=text-center mb-8 relative
-            h1 class=text-3xl smtext-4xl font-bold text-gray-900 data-lang-key=main_titleGenerador de Cartas de Presentación IAh1
-            p class=text-md smtext-lg text-gray-600 mt-2 data-lang-key=subtitleCrea y perfecciona tu carta de presentación con el poder de la IA.p
-            !-- Language Toggle --
-            div class=absolute top-0 right-0 flex items-center space-x-2
-                span class=font-semibold text-sm text-gray-600ESspan
-                input type=checkbox id=lang-toggle class=hidden
-                label for=lang-toggle class=lang-toggle-label
-                    div class=balldiv
-                label
-                span class=font-semibold text-sm text-gray-600ENspan
-            div
-        header
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-4xl">
+        <header class="text-center mb-8 relative">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900" data-lang-key="main_title">Generador de Cartas de Presentación IA</h1>
+            <p class="text-md sm:text-lg text-gray-600 mt-2" data-lang-key="subtitle">Crea y perfecciona tu carta de presentación con el poder de la IA.</p>
+            <!-- Language Toggle -->
+            <div class="absolute top-0 right-0 flex items-center space-x-2">
+                <span class="font-semibold text-sm text-gray-600">ES</span>
+                <input type="checkbox" id="lang-toggle" class="hidden">
+                <label for="lang-toggle" class="lang-toggle-label">
+                    <div class="ball"></div>
+                </label>
+                <span class="font-semibold text-sm text-gray-600">EN</span>
+            </div>
+        </header>
 
-        !-- Indicador de Pasos --
-        div class=w-full mb-8
-            div class=flex items-center justify-center
-                div id=step-indicator-1 class=step-indicator flex items-center justify-center w-10 h-10 bg-indigo-600 text-white rounded-full font-bold text-lg1div
-                div class=flex-auto border-t-2 border-gray-300 transition-colors duration-500 mx-4 id=step-line-1div
-                div id=step-indicator-2 class=step-indicator flex items-center justify-center w-10 h-10 bg-gray-300 text-gray-500 rounded-full font-bold text-lg2div
-                div class=flex-auto border-t-2 border-gray-300 transition-colors duration-500 mx-4 id=step-line-2div
-                div id=step-indicator-3 class=step-indicator flex items-center justify-center w-10 h-10 bg-gray-300 text-gray-500 rounded-full font-bold text-lg3div
-                 div class=flex-auto border-t-2 border-gray-300 transition-colors duration-500 mx-4 id=step-line-3div
-                div id=step-indicator-4 class=step-indicator flex items-center justify-center w-10 h-10 bg-gray-300 text-gray-500 rounded-full font-bold text-lg4div
-            div
-        div
+        <!-- Indicador de Pasos -->
+        <div class="w-full mb-8">
+            <div class="flex items-center justify-center">
+                <div id="step-indicator-1" class="step-indicator flex items-center justify-center w-10 h-10 bg-indigo-600 text-white rounded-full font-bold text-lg">1</div>
+                <div class="flex-auto border-t-2 border-gray-300 transition-colors duration-500 mx-4" id="step-line-1"></div>
+                <div id="step-indicator-2" class="step-indicator flex items-center justify-center w-10 h-10 bg-gray-300 text-gray-500 rounded-full font-bold text-lg">2</div>
+                <div class="flex-auto border-t-2 border-gray-300 transition-colors duration-500 mx-4" id="step-line-2"></div>
+                <div id="step-indicator-3" class="step-indicator flex items-center justify-center w-10 h-10 bg-gray-300 text-gray-500 rounded-full font-bold text-lg">3</div>
+                 <div class="flex-auto border-t-2 border-gray-300 transition-colors duration-500 mx-4" id="step-line-3"></div>
+                <div id="step-indicator-4" class="step-indicator flex items-center justify-center w-10 h-10 bg-gray-300 text-gray-500 rounded-full font-bold text-lg">4</div>
+            </div>
+        </div>
 
-        main id=app-container
+        <main id="app-container">
 
-            !-- Paso 1 Información Personal y de la Empresa --
-            div id=step-1 class=bg-white p-6 smp-8 rounded-xl shadow-lg transition-opacity duration-500
-                h2 class=text-2xl font-bold mb-6 data-lang-key=step1_titlePaso 1 Tu Información y la de la Empresah2
-                div class=grid grid-cols-1 mdgrid-cols-2 gap-6
-                    div
-                        h3 class=text-lg font-semibold mb-3 text-indigo-700 data-lang-key=your_dataTus Datosh3
-                        input id=fullName type=text data-lang-key-placeholder=placeholder_fullName placeholder=Tu Nombre Completo class=w-full p-3 border border-gray-300 rounded-lg focusring-2 focusring-indigo-500 focusborder-indigo-500 mb-4
-                        input id=contactInfo type=text data-lang-key-placeholder=placeholder_contactInfo placeholder=Email, Teléfono, LinkedIn (URL) class=w-full p-3 border border-gray-300 rounded-lg focusring-2 focusring-indigo-500 focusborder-indigo-500
-                    div
-                    div
-                        h3 class=text-lg font-semibold mb-3 text-indigo-700 data-lang-key=company_dataDatos de la Empresah3
-                        input id=companyName type=text data-lang-key-placeholder=placeholder_companyName placeholder=Nombre de la Empresa class=w-full p-3 border border-gray-300 rounded-lg focusring-2 focusring-indigo-500 focusborder-indigo-500 mb-4
-                        input id=hiringManager type=text data-lang-key-placeholder=placeholder_hiringManager placeholder=Nombre del Gerente de Contratación (si lo sabes) class=w-full p-3 border border-gray-300 rounded-lg focusring-2 focusring-indigo-500 focusborder-indigo-500
-                    div
-                div
-                div class=mt-8 text-right
-                    button onclick=nextStep(2) class=bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hoverbg-indigo-700 transition-colors data-lang-key=next_buttonSiguientebutton
-                div
-            div
+            <!-- Paso 1: Información Personal y de la Empresa -->
+            <div id="step-1" class="bg-white p-6 sm:p-8 rounded-xl shadow-lg transition-opacity duration-500">
+                <h2 class="text-2xl font-bold mb-6" data-lang-key="step1_title">Paso 1: Tu Información y la de la Empresa</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-3 text-indigo-700" data-lang-key="your_data">Tus Datos</h3>
+                        <input id="fullName" type="text" data-lang-key-placeholder="placeholder_fullName" placeholder="Tu Nombre Completo" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 mb-4">
+                        <input id="contactInfo" type="text" data-lang-key-placeholder="placeholder_contactInfo" placeholder="Email, Teléfono, LinkedIn (URL)" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-3 text-indigo-700" data-lang-key="company_data">Datos de la Empresa</h3>
+                        <input id="companyName" type="text" data-lang-key-placeholder="placeholder_companyName" placeholder="Nombre de la Empresa" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 mb-4">
+                        <input id="hiringManager" type="text" data-lang-key-placeholder="placeholder_hiringManager" placeholder="Nombre del Gerente de Contratación (si lo sabes)" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                </div>
+                <div class="mt-8 text-right">
+                    <button onclick="nextStep(2)" class="bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700 transition-colors" data-lang-key="next_button">Siguiente</button>
+                </div>
+            </div>
 
-            !-- Paso 2 El Puesto y tu CV --
-            div id=step-2 class=bg-white p-6 smp-8 rounded-xl shadow-lg transition-opacity duration-500 hidden
-                h2 class=text-2xl font-bold mb-6 data-lang-key=step2_titlePaso 2 El Puesto y tu CVh2
-                div class=mb-6
-                    label for=jobTitle class=block text-lg font-semibold mb-2 text-indigo-700 data-lang-key=job_title_labelPuesto al que Aplicaslabel
-                    input id=jobTitle type=text data-lang-key-placeholder=placeholder_jobTitle placeholder=Ej Desarrollador Full-Stack class=w-full p-3 border border-gray-300 rounded-lg focusring-2 focusring-indigo-500 focusborder-indigo-500
-                div
-                div class=mb-6
-                    label for=jobUrl class=block text-lg font-semibold mb-2 text-indigo-700 data-lang-key=job_url_labelEnlace de la Oferta (LinkedIn, Indeed, etc.)label
-                    input id=jobUrl type=url data-lang-key-placeholder=placeholder_jobUrl placeholder=Pega aquí el enlace de la oferta de trabajo class=w-full p-3 border border-gray-300 rounded-lg focusring-2 focusring-indigo-500 focusborder-indigo-500
-                div
-                div class=mb-6
-                    label for=jobDescription class=block text-lg font-semibold mb-2 text-indigo-700 data-lang-key=job_desc_labelDescripción del Puesto (Obligatorio)label
-                    textarea id=jobDescription rows=6 data-lang-key-placeholder=placeholder_jobDesc placeholder=Pega aquí la descripción completa de la oferta de trabajo... class=w-full p-3 border border-gray-300 rounded-lg focusring-2 focusring-indigo-500 focusborder-indigo-500textarea
-                    button onclick=suggestKeyPoints() class=mt-2 bg-indigo-100 text-indigo-700 font-semibold py-2 px-4 rounded-lg hoverbg-indigo-200 transition-colors flex items-center data-lang-key=suggest_key_points_button
+            <!-- Paso 2: El Puesto y tu CV -->
+            <div id="step-2" class="bg-white p-6 sm:p-8 rounded-xl shadow-lg transition-opacity duration-500 hidden">
+                <h2 class="text-2xl font-bold mb-6" data-lang-key="step2_title">Paso 2: El Puesto y tu CV</h2>
+                <div class="mb-6">
+                    <label for="jobTitle" class="block text-lg font-semibold mb-2 text-indigo-700" data-lang-key="job_title_label">Puesto al que Aplicas</label>
+                    <input id="jobTitle" type="text" data-lang-key-placeholder="placeholder_jobTitle" placeholder="Ej: Desarrollador Full-Stack" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div class="mb-6">
+                    <label for="jobUrl" class="block text-lg font-semibold mb-2 text-indigo-700" data-lang-key="job_url_label">Enlace de la Oferta (LinkedIn, Indeed, etc.)</label>
+                    <input id="jobUrl" type="url" data-lang-key-placeholder="placeholder_jobUrl" placeholder="Pega aquí el enlace de la oferta de trabajo" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div class="mb-6">
+                    <label for="jobDescription" class="block text-lg font-semibold mb-2 text-indigo-700" data-lang-key="job_desc_label">Descripción del Puesto (Obligatorio)</label>
+                    <textarea id="jobDescription" rows="6" data-lang-key-placeholder="placeholder_jobDesc" placeholder="Pega aquí la descripción completa de la oferta de trabajo..." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                    <button onclick="suggestKeyPoints()" class="mt-2 bg-indigo-100 text-indigo-700 font-semibold py-2 px-4 rounded-lg hover:bg-indigo-200 transition-colors flex items-center" data-lang-key="suggest_key_points_button">
                         ✨ Sugerir Puntos Clave del Puesto
-                    button
-                    div id=keyPointsResult class=mt-4 p-4 rounded-lg gemini-feature hiddendiv
-                div
-                div class=mb-6
-                    label for=cvFile class=block text-lg font-semibold mb-2 text-indigo-700 data-lang-key=upload_cv_labelSube tu CV (PDF)label
-                    input type=file id=cvFile accept=.pdf class=w-full text-sm text-gray-500 filemr-4 filepy-2 filepx-4 filerounded-full fileborder-0 filetext-sm filefont-semibold filebg-indigo-50 filetext-indigo-700 hoverfilebg-indigo-100
-                    p id=cv-status class=text-sm text-green-600 mt-2 font-mediump
-                div
-                div class=mt-8 flex justify-between
-                    button onclick=prevStep(1) class=bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg hoverbg-gray-400 transition-colors data-lang-key=prev_buttonAnteriorbutton
-                    button onclick=nextStep(3) class=bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hoverbg-indigo-700 transition-colors data-lang-key=next_buttonSiguientebutton
-                div
-            div
+                    </button>
+                    <div id="keyPointsResult" class="mt-4 p-4 rounded-lg gemini-feature hidden"></div>
+                </div>
+                <div class="mb-6">
+                    <label for="cvFile" class="block text-lg font-semibold mb-2 text-indigo-700" data-lang-key="upload_cv_label">Sube tu CV (PDF)</label>
+                    <input type="file" id="cvFile" accept=".pdf" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                    <p id="cv-status" class="text-sm text-green-600 mt-2 font-medium"></p>
+                </div>
+                <div class="mt-8 flex justify-between">
+                    <button onclick="prevStep(1)" class="bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg hover:bg-gray-400 transition-colors" data-lang-key="prev_button">Anterior</button>
+                    <button onclick="nextStep(3)" class="bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700 transition-colors" data-lang-key="next_button">Siguiente</button>
+                </div>
+            </div>
 
-            !-- Paso 3 Tu Valor y Tono --
-            div id=step-3 class=bg-white p-6 smp-8 rounded-xl shadow-lg transition-opacity duration-500 hidden
-                h2 class=text-2xl font-bold mb-6 data-lang-key=step3_titlePaso 3 Tu Valor y Tonoh2
-                div class=mb-6
-                    label for=strengths class=block text-lg font-semibold mb-2 text-indigo-700 data-lang-key=strengths_labelTus 2-3 Puntos Fuertes Principaleslabel
-                    textarea id=strengths rows=3 data-lang-key-placeholder=placeholder_strengths placeholder=Ej Liderazgo de proyectos, experto en Python, comunicación efectiva... class=w-full p-3 border border-gray-300 rounded-lg focusring-2 focusring-indigo-500 focusborder-indigo-500textarea
-                div
-                div class=mb-6
-                    label for=experience class=block text-lg font-semibold mb-2 text-indigo-700 data-lang-key=experience_labelMenciona 2 Logros o Experiencias Relevanteslabel
-                    textarea id=experience rows=4 data-lang-key-placeholder=placeholder_experience placeholder=Ej 1. Aumenté la eficiencia del equipo en un 20% automatizando tareas. 2. Lideré el lanzamiento exitoso del producto X... class=w-full p-3 border border-gray-300 rounded-lg focusring-2 focusring-indigo-500 focusborder-indigo-500textarea
-                div
-                div class=mb-6
-                    label for=whyCompany class=block text-lg font-semibold mb-2 text-indigo-700 data-lang-key=why_company_label¿Por qué te interesa esta empresalabel
-                    input id=whyCompany type=text data-lang-key-placeholder=placeholder_whyCompany placeholder=Admiro su innovación en [campo], su cultura de trabajo... class=w-full p-3 border border-gray-300 rounded-lg focusring-2 focusring-indigo-500 focusborder-indigo-500
-                div
-                 div class=mb-6
-                    label for=tone class=block text-lg font-semibold mb-2 text-indigo-700 data-lang-key=tone_labelTono de la cartalabel
-                    select id=tone class=w-full p-3 border border-gray-300 rounded-lg focusring-2 focusring-indigo-500 focusborder-indigo-500 bg-white
-                        option value=Profesional data-lang-key=tone_professionalProfesionaloption
-                        option value=Entusiasta y enérgico data-lang-key=tone_enthusiasticEntusiasta y enérgicooption
-                        option value=Formal y corporativo data-lang-key=tone_formalFormal y corporativooption
-                        option value=Creativo y original data-lang-key=tone_creativeCreativo y originaloption
-                    select
-                div
-                div class=mt-8 flex justify-between
-                    button onclick=prevStep(2) class=bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg hoverbg-gray-400 transition-colors data-lang-key=prev_buttonAnteriorbutton
-                    button onclick=generateCoverLetter() class=bg-green-600 text-white font-bold py-3 px-6 rounded-lg hoverbg-green-700 transition-colors flex items-center
-                        svg class=w-5 h-5 mr-2 fill=none stroke=currentColor viewBox=0 0 24 24 xmlns=httpwww.w3.org2000svgpath stroke-linecap=round stroke-linejoin=round stroke-width=2 d=M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547zpathsvg
-                        span data-lang-key=generate_buttonGenerar Cartaspan
-                    button
-                div
-            div
+            <!-- Paso 3: Tu Valor y Tono -->
+            <div id="step-3" class="bg-white p-6 sm:p-8 rounded-xl shadow-lg transition-opacity duration-500 hidden">
+                <h2 class="text-2xl font-bold mb-6" data-lang-key="step3_title">Paso 3: Tu Valor y Tono</h2>
+                <div class="mb-6">
+                    <label for="strengths" class="block text-lg font-semibold mb-2 text-indigo-700" data-lang-key="strengths_label">Tus 2-3 Puntos Fuertes Principales</label>
+                    <textarea id="strengths" rows="3" data-lang-key-placeholder="placeholder_strengths" placeholder="Ej: Liderazgo de proyectos, experto en Python, comunicación efectiva..." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                </div>
+                <div class="mb-6">
+                    <label for="experience" class="block text-lg font-semibold mb-2 text-indigo-700" data-lang-key="experience_label">Menciona 2 Logros o Experiencias Relevantes</label>
+                    <textarea id="experience" rows="4" data-lang-key-placeholder="placeholder_experience" placeholder="Ej: 1. Aumenté la eficiencia del equipo en un 20% automatizando tareas. 2. Lideré el lanzamiento exitoso del producto X..." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                </div>
+                <div class="mb-6">
+                    <label for="whyCompany" class="block text-lg font-semibold mb-2 text-indigo-700" data-lang-key="why_company_label">¿Por qué te interesa esta empresa?</label>
+                    <input id="whyCompany" type="text" data-lang-key-placeholder="placeholder_whyCompany" placeholder="Admiro su innovación en [campo], su cultura de trabajo..." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                 <div class="mb-6">
+                    <label for="tone" class="block text-lg font-semibold mb-2 text-indigo-700" data-lang-key="tone_label">Tono de la carta</label>
+                    <select id="tone" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                        <option value="Profesional" data-lang-key="tone_professional">Profesional</option>
+                        <option value="Entusiasta y enérgico" data-lang-key="tone_enthusiastic">Entusiasta y enérgico</option>
+                        <option value="Formal y corporativo" data-lang-key="tone_formal">Formal y corporativo</option>
+                        <option value="Creativo y original" data-lang-key="tone_creative">Creativo y original</option>
+                    </select>
+                </div>
+                <div class="mt-8 flex justify-between">
+                    <button onclick="prevStep(2)" class="bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg hover:bg-gray-400 transition-colors" data-lang-key="prev_button">Anterior</button>
+                    <button onclick="generateCoverLetter()" class="bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition-colors flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                        <span data-lang-key="generate_button">Generar Carta</span>
+                    </button>
+                </div>
+            </div>
             
-            !-- Loading Spinner --
-            div id=loading class=text-center p-8 hidden
-                div role=status class=flex flex-col items-center justify-center
-                    svg aria-hidden=true class=w-12 h-12 mb-4 text-gray-200 animate-spin darktext-gray-600 fill-indigo-600 viewBox=0 0 100 101 fill=none xmlns=httpwww.w3.org2000svgpath d=M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z fill=currentColorpath d=M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0492C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z fill=currentFillsvg
-                    h3 id=loading-text class=text-xl font-semibold text-gray-700 data-lang-key=loading_textAnalizando tu perfil y generando tu carta...h3
-                    p class=text-gray-500 data-lang-key=loading_subtextEsto puede tardar unos segundos.p
-                div
-            div
+            <!-- Loading Spinner -->
+            <div id="loading" class="text-center p-8 hidden">
+                <div role="status" class="flex flex-col items-center justify-center">
+                    <svg aria-hidden="true" class="w-12 h-12 mb-4 text-gray-200 animate-spin dark:text-gray-600 fill-indigo-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/><path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0492C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/></svg>
+                    <h3 id="loading-text" class="text-xl font-semibold text-gray-700" data-lang-key="loading_text">Analizando tu perfil y generando tu carta...</h3>
+                    <p class="text-gray-500" data-lang-key="loading_subtext">Esto puede tardar unos segundos.</p>
+                </div>
+            </div>
 
-            !-- Paso 4 Resultado --
-            div id=step-4 class=bg-white p-6 smp-8 rounded-xl shadow-lg transition-opacity duration-500 hidden
-                h2 class=text-2xl font-bold mb-2 data-lang-key=step4_title¡Tu Carta de Presentación está Lista!h2
-                p class=text-gray-600 mb-6 data-lang-key=step4_subtitleRevisa el texto generado. Puedes editarlo aquí mismo antes de copiar o exportar.p
-                textarea id=coverLetterResult rows=15 class=w-full p-4 border border-gray-300 rounded-lg bg-gray-50 focusring-2 focusring-indigo-500 focusborder-indigo-500textarea
+            <!-- Paso 4: Resultado -->
+            <div id="step-4" class="bg-white p-6 sm:p-8 rounded-xl shadow-lg transition-opacity duration-500 hidden">
+                <h2 class="text-2xl font-bold mb-2" data-lang-key="step4_title">¡Tu Carta de Presentación está Lista!</h2>
+                <p class="text-gray-600 mb-6" data-lang-key="step4_subtitle">Revisa el texto generado. Puedes editarlo aquí mismo antes de copiar o exportar.</p>
+                <textarea id="coverLetterResult" rows="15" class="w-full p-4 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
                 
-                div class=mt-6 border-t pt-6
-                     h3 class=text-xl font-bold mb-4 text-gray-800 data-lang-key=career_assistant_titleAsistente de Carrera IAh3
-                     div class=grid grid-cols-1 mdgrid-cols-2 gap-4
-                        button onclick=analyzeAndImprove() class=w-full bg-indigo-100 text-indigo-700 font-semibold py-3 px-4 rounded-lg hoverbg-indigo-200 transition-colors flex items-center justify-center data-lang-key=analyze_button
+                <div class="mt-6 border-t pt-6">
+                     <h3 class="text-xl font-bold mb-4 text-gray-800" data-lang-key="career_assistant_title">Asistente de Carrera IA</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button onclick="analyzeAndImprove()" class="w-full bg-indigo-100 text-indigo-700 font-semibold py-3 px-4 rounded-lg hover:bg-indigo-200 transition-colors flex items-center justify-center" data-lang-key="analyze_button">
                             ✨ Analizar y Mejorar Mi Carta
-                        button
-                         button onclick=generateHeadlines() class=w-full bg-indigo-100 text-indigo-700 font-semibold py-3 px-4 rounded-lg hoverbg-indigo-200 transition-colors flex items-center justify-center data-lang-key=headlines_button
+                        </button>
+                         <button onclick="generateHeadlines()" class="w-full bg-indigo-100 text-indigo-700 font-semibold py-3 px-4 rounded-lg hover:bg-indigo-200 transition-colors flex items-center justify-center" data-lang-key="headlines_button">
                             ✨ Generar Asuntos de Email
-                        button
-                     div
-                     div id=analysisResult class=mt-4 p-4 rounded-lg gemini-feature hiddendiv
-                     div id=headlinesResult class=mt-4 p-4 rounded-lg gemini-feature hiddendiv
-                div
+                        </button>
+                     </div>
+                     <div id="analysisResult" class="mt-4 p-4 rounded-lg gemini-feature hidden"></div>
+                     <div id="headlinesResult" class="mt-4 p-4 rounded-lg gemini-feature hidden"></div>
+                </div>
 
-                div class=mt-6 flex flex-col smflex-row gap-4
-                    button onclick=copyToClipboard() class=w-full smw-auto flex-1 bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hoverbg-indigo-700 transition-colors flex items-center justify-center data-lang-key=copy_button
+                <div class="mt-6 flex flex-col sm:flex-row gap-4">
+                    <button onclick="copyToClipboard()" class="w-full sm:w-auto flex-1 bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center" data-lang-key="copy_button">
                         Copiar Texto
-                    button
-                    button onclick=exportToPDF() class=w-full smw-auto flex-1 bg-red-600 text-white font-bold py-3 px-6 rounded-lg hoverbg-red-700 transition-colors flex items-center justify-center data-lang-key=export_button
+                    </button>
+                    <button onclick="exportToPDF()" class="w-full sm:w-auto flex-1 bg-red-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center" data-lang-key="export_button">
                         Exportar a PDF
-                    button
-                div
-                 div class=mt-6 text-center
-                    button onclick=startOver() class=text-indigo-600 hovertext-indigo-800 font-semibold data-lang-key=start_over_buttonCrear otra cartabutton
-                div
-            div
-        main
-    div
+                    </button>
+                </div>
+                 <div class="mt-6 text-center">
+                    <button onclick="startOver()" class="text-indigo-600 hover:text-indigo-800 font-semibold" data-lang-key="start_over_button">Crear otra carta</button>
+                </div>
+            </div>
+        </main>
+    </div>
 
-    script
-         --- Estado de la Aplicación ---
+    <script>
+        // --- Estado de la Aplicación ---
         let currentStep = 1;
         let currentLanguage = 'es';
         const formData = {
-            fullName '', contactInfo '', companyName '', hiringManager '',
-            jobTitle '', jobUrl '', jobDescription '', cvText '',
-            strengths '', experience '', whyCompany '', tone 'Profesional'
+            fullName: '', contactInfo: '', companyName: '', hiringManager: '',
+            jobTitle: '', jobUrl: '', jobDescription: '', cvText: '',
+            strengths: '', experience: '', whyCompany: '', tone: 'Profesional'
         };
 
         const uiStrings = {
-            es {
-                main_title Generador de Cartas de Presentación IA,
-                subtitle Crea y perfecciona tu carta de presentación con el poder de la IA.,
-                step1_title Paso 1 Tu Información y la de la Empresa,
-                your_data Tus Datos,
-                company_data Datos de la Empresa,
-                placeholder_fullName Tu Nombre Completo,
-                placeholder_contactInfo Email, Teléfono, LinkedIn (URL),
-                placeholder_companyName Nombre de la Empresa,
-                placeholder_hiringManager Nombre del Gerente de Contratación (si lo sabes),
-                next_button Siguiente,
-                prev_button Anterior,
-                step2_title Paso 2 El Puesto y tu CV,
-                job_title_label Puesto al que Aplicas,
-                placeholder_jobTitle Ej Desarrollador Full-Stack,
-                job_url_label Enlace de la Oferta (LinkedIn, Indeed, etc.),
-                placeholder_jobUrl Pega aquí el enlace de la oferta de trabajo,
-                job_desc_label Descripción del Puesto (Obligatorio),
-                placeholder_jobDesc Pega aquí la descripción completa de la oferta de trabajo...,
-                suggest_key_points_button ✨ Sugerir Puntos Clave del Puesto,
-                upload_cv_label Sube tu CV (PDF),
-                step3_title Paso 3 Tu Valor y Tono,
-                strengths_label Tus 2-3 Puntos Fuertes Principales,
-                placeholder_strengths Ej Liderazgo de proyectos, experto en Python...,
-                experience_label Menciona 2 Logros o Experiencias Relevantes,
-                placeholder_experience Ej 1. Aumenté la eficiencia en un 20%...,
-                why_company_label ¿Por qué te interesa esta empresa,
-                placeholder_whyCompany Admiro su innovación en [campo]...,
-                tone_label Tono de la carta,
-                tone_professional Profesional,
-                tone_enthusiastic Entusiasta y enérgico,
-                tone_formal Formal y corporativo,
-                tone_creative Creativo y original,
-                generate_button Generar Carta,
-                loading_text Analizando tu perfil y generando tu carta...,
-                loading_subtext Esto puede tardar unos segundos.,
-                step4_title ¡Tu Carta de Presentación está Lista!,
-                step4_subtitle Revisa el texto generado. Puedes editarlo aquí mismo antes de copiar o exportar.,
-                career_assistant_title Asistente de Carrera IA,
-                analyze_button ✨ Analizar y Mejorar Mi Carta,
-                headlines_button ✨ Generar Asuntos de Email,
-                copy_button Copiar Texto,
-                export_button Exportar a PDF,
-                start_over_button Crear otra carta,
-                cv_loading Cargando y analizando CV...,
-                cv_success ✅ CV cargado y analizado con éxito.,
-                cv_error Error al procesar el PDF. Inténtalo de nuevo.,
-                cv_select_pdf Por favor, selecciona un archivo PDF.,
-                jd_alert Por favor, pega primero la descripción del puesto.,
-                jd_analyzing Analizando...,
-                analysis_title strongSugerencias de Mejorastrongbr,
-                headlines_title strongSugerencias de Asuntostrongbr,
-                error_prefix Error ,
-                copied_alert ¡Texto copiado al portapapeles!,
-                copy_error_alert No se pudo copiar el texto. Por favor, hazlo manualmente.
+            es: {
+                main_title: "Generador de Cartas de Presentación IA",
+                subtitle: "Crea y perfecciona tu carta de presentación con el poder de la IA.",
+                step1_title: "Paso 1: Tu Información y la de la Empresa",
+                your_data: "Tus Datos",
+                company_data: "Datos de la Empresa",
+                placeholder_fullName: "Tu Nombre Completo",
+                placeholder_contactInfo: "Email, Teléfono, LinkedIn (URL)",
+                placeholder_companyName: "Nombre de la Empresa",
+                placeholder_hiringManager: "Nombre del Gerente de Contratación (si lo sabes)",
+                next_button: "Siguiente",
+                prev_button: "Anterior",
+                step2_title: "Paso 2: El Puesto y tu CV",
+                job_title_label: "Puesto al que Aplicas",
+                placeholder_jobTitle: "Ej: Desarrollador Full-Stack",
+                job_url_label: "Enlace de la Oferta (LinkedIn, Indeed, etc.)",
+                placeholder_jobUrl: "Pega aquí el enlace de la oferta de trabajo",
+                job_desc_label: "Descripción del Puesto (Obligatorio)",
+                placeholder_jobDesc: "Pega aquí la descripción completa de la oferta de trabajo...",
+                suggest_key_points_button: "✨ Sugerir Puntos Clave del Puesto",
+                upload_cv_label: "Sube tu CV (PDF)",
+                step3_title: "Paso 3: Tu Valor y Tono",
+                strengths_label: "Tus 2-3 Puntos Fuertes Principales",
+                placeholder_strengths: "Ej: Liderazgo de proyectos, experto en Python...",
+                experience_label: "Menciona 2 Logros o Experiencias Relevantes",
+                placeholder_experience: "Ej: 1. Aumenté la eficiencia en un 20%...",
+                why_company_label: "¿Por qué te interesa esta empresa?",
+                placeholder_whyCompany: "Admiro su innovación en [campo]...",
+                tone_label: "Tono de la carta",
+                tone_professional: "Profesional",
+                tone_enthusiastic: "Entusiasta y enérgico",
+                tone_formal: "Formal y corporativo",
+                tone_creative: "Creativo y original",
+                generate_button: "Generar Carta",
+                loading_text: "Analizando tu perfil y generando tu carta...",
+                loading_subtext: "Esto puede tardar unos segundos.",
+                step4_title: "¡Tu Carta de Presentación está Lista!",
+                step4_subtitle: "Revisa el texto generado. Puedes editarlo aquí mismo antes de copiar o exportar.",
+                career_assistant_title: "Asistente de Carrera IA",
+                analyze_button: "✨ Analizar y Mejorar Mi Carta",
+                headlines_button: "✨ Generar Asuntos de Email",
+                copy_button: "Copiar Texto",
+                export_button: "Exportar a PDF",
+                start_over_button: "Crear otra carta",
+                cv_loading: "Cargando y analizando CV...",
+                cv_success: "✅ CV cargado y analizado con éxito.",
+                cv_error: "Error al procesar el PDF. Inténtalo de nuevo.",
+                cv_select_pdf: "Por favor, selecciona un archivo PDF.",
+                jd_alert: "Por favor, pega primero la descripción del puesto.",
+                jd_analyzing: "Analizando...",
+                analysis_title: "<strong>Sugerencias de Mejora:</strong><br>",
+                headlines_title: "<strong>Sugerencias de Asunto:</strong><br>",
+                error_prefix: "Error: ",
+                copied_alert: "¡Texto copiado al portapapeles!",
+                copy_error_alert: "No se pudo copiar el texto. Por favor, hazlo manualmente."
             },
-            en {
-                main_title AI Cover Letter Generator,
-                subtitle Create and perfect your cover letter with the power of AI.,
-                step1_title Step 1 Your Information & the Company's,
-                your_data Your Details,
-                company_data Company Details,
-                placeholder_fullName Your Full Name,
-                placeholder_contactInfo Email, Phone, LinkedIn (URL),
-                placeholder_companyName Company Name,
-                placeholder_hiringManager Hiring Manager's Name (if you know it),
-                next_button Next,
-                prev_button Previous,
-                step2_title Step 2 The Job & Your CV,
-                job_title_label Job Title You're Applying For,
-                placeholder_jobTitle e.g., Full-Stack Developer,
-                job_url_label Job Post Link (LinkedIn, Indeed, etc.),
-                placeholder_jobUrl Paste the job post link here,
-                job_desc_label Job Description (Required),
-                placeholder_jobDesc Paste the full job description here...,
-                suggest_key_points_button ✨ Suggest Key Points from Job,
-                upload_cv_label Upload Your CV (PDF),
-                step3_title Step 3 Your Value & Tone,
-                strengths_label Your Top 2-3 Strengths,
-                placeholder_strengths e.g., Project leadership, Python expert...,
-                experience_label Mention 2 Relevant Achievements or Experiences,
-                placeholder_experience e.g., 1. Increased team efficiency by 20%...,
-                why_company_label Why are you interested in this company,
-                placeholder_whyCompany I admire their innovation in [field]...,
-                tone_label Letter Tone,
-                tone_professional Professional,
-                tone_enthusiastic Enthusiastic and energetic,
-                tone_formal Formal and corporate,
-                tone_creative Creative and original,
-                generate_button Generate Letter,
-                loading_text Analyzing your profile and generating your letter...,
-                loading_subtext This may take a few seconds.,
-                step4_title Your Cover Letter is Ready!,
-                step4_subtitle Review the generated text. You can edit it right here before copying or exporting.,
-                career_assistant_title AI Career Assistant,
-                analyze_button ✨ Analyze & Improve My Letter,
-                headlines_button ✨ Generate Email Subjects,
-                copy_button Copy Text,
-                export_button Export to PDF,
-                start_over_button Create Another Letter,
-                cv_loading Loading and analyzing CV...,
-                cv_success ✅ CV successfully loaded and analyzed.,
-                cv_error Error processing PDF. Please try again.,
-                cv_select_pdf Please select a PDF file.,
-                jd_alert Please paste the job description first.,
-                jd_analyzing Analyzing...,
-                analysis_title strongImprovement Suggestionsstrongbr,
-                headlines_title strongSubject Line Suggestionsstrongbr,
-                error_prefix Error ,
-                copied_alert Text copied to clipboard!,
-                copy_error_alert Could not copy text. Please do it manually.
+            en: {
+                main_title: "AI Cover Letter Generator",
+                subtitle: "Create and perfect your cover letter with the power of AI.",
+                step1_title: "Step 1: Your Information & the Company's",
+                your_data: "Your Details",
+                company_data: "Company Details",
+                placeholder_fullName: "Your Full Name",
+                placeholder_contactInfo: "Email, Phone, LinkedIn (URL)",
+                placeholder_companyName: "Company Name",
+                placeholder_hiringManager: "Hiring Manager's Name (if you know it)",
+                next_button: "Next",
+                prev_button: "Previous",
+                step2_title: "Step 2: The Job & Your CV",
+                job_title_label: "Job Title You're Applying For",
+                placeholder_jobTitle: "e.g., Full-Stack Developer",
+                job_url_label: "Job Post Link (LinkedIn, Indeed, etc.)",
+                placeholder_jobUrl: "Paste the job post link here",
+                job_desc_label: "Job Description (Required)",
+                placeholder_jobDesc: "Paste the full job description here...",
+                suggest_key_points_button: "✨ Suggest Key Points from Job",
+                upload_cv_label: "Upload Your CV (PDF)",
+                step3_title: "Step 3: Your Value & Tone",
+                strengths_label: "Your Top 2-3 Strengths",
+                placeholder_strengths: "e.g., Project leadership, Python expert...",
+                experience_label: "Mention 2 Relevant Achievements or Experiences",
+                placeholder_experience: "e.g., 1. Increased team efficiency by 20%...",
+                why_company_label: "Why are you interested in this company?",
+                placeholder_whyCompany: "I admire their innovation in [field]...",
+                tone_label: "Letter Tone",
+                tone_professional: "Professional",
+                tone_enthusiastic: "Enthusiastic and energetic",
+                tone_formal: "Formal and corporate",
+                tone_creative: "Creative and original",
+                generate_button: "Generate Letter",
+                loading_text: "Analyzing your profile and generating your letter...",
+                loading_subtext: "This may take a few seconds.",
+                step4_title: "Your Cover Letter is Ready!",
+                step4_subtitle: "Review the generated text. You can edit it right here before copying or exporting.",
+                career_assistant_title: "AI Career Assistant",
+                analyze_button: "✨ Analyze & Improve My Letter",
+                headlines_button: "✨ Generate Email Subjects",
+                copy_button: "Copy Text",
+                export_button: "Export to PDF",
+                start_over_button: "Create Another Letter",
+                cv_loading: "Loading and analyzing CV...",
+                cv_success: "✅ CV successfully loaded and analyzed.",
+                cv_error: "Error processing PDF. Please try again.",
+                cv_select_pdf: "Please select a PDF file.",
+                jd_alert: "Please paste the job description first.",
+                jd_analyzing: "Analyzing...",
+                analysis_title: "<strong>Improvement Suggestions:</strong><br>",
+                headlines_title: "<strong>Subject Line Suggestions:</strong><br>",
+                error_prefix: "Error: ",
+                copied_alert: "Text copied to clipboard!",
+                copy_error_alert: "Could not copy text. Please do it manually."
             }
         };
 
@@ -339,14 +339,14 @@ body class=bg-gray-50 text-gray-800
             currentLanguage = lang;
             document.documentElement.lang = lang;
             const elements = document.querySelectorAll('[data-lang-key]');
-            elements.forEach(el = {
+            elements.forEach(el => {
                 const key = el.getAttribute('data-lang-key');
                 if (uiStrings[lang][key]) {
                     el.textContent = uiStrings[lang][key];
                 }
             });
             const placeholderElements = document.querySelectorAll('[data-lang-key-placeholder]');
-            placeholderElements.forEach(el = {
+            placeholderElements.forEach(el => {
                 const key = el.getAttribute('data-lang-key-placeholder');
                 if (uiStrings[lang][key]) {
                     el.placeholder = uiStrings[lang][key];
@@ -354,16 +354,16 @@ body class=bg-gray-50 text-gray-800
             });
         }
 
-        document.getElementById('lang-toggle').addEventListener('change', (e) = {
-            setLanguage(e.target.checked  'en'  'es');
+        document.getElementById('lang-toggle').addEventListener('change', (e) => {
+            setLanguage(e.target.checked ? 'en' : 'es');
         });
 
-         --- Navegación entre Pasos ---
+        // --- Navegación entre Pasos ---
         function updateStepIndicator(step) {
-            for (let i = 1; i = 4; i++) {
+            for (let i = 1; i <= 4; i++) {
                 const indicator = document.getElementById(`step-indicator-${i}`);
                 const line = document.getElementById(`step-line-${i-1}`);
-                if (i = step) {
+                if (i <= step) {
                     indicator.classList.remove('bg-gray-300', 'text-gray-500');
                     indicator.classList.add('bg-indigo-600', 'text-white');
                     if (line) {
@@ -394,12 +394,12 @@ body class=bg-gray-50 text-gray-800
         
         function startOver() {
             currentStep = 1;
-            Object.keys(formData).forEach(key = formData[key] = '');
+            Object.keys(formData).forEach(key => formData[key] = '');
             const formIds = ['fullName', 'contactInfo', 'companyName', 'hiringManager', 'jobTitle', 'jobUrl', 'jobDescription', 'cvFile', 'strengths', 'experience', 'whyCompany', 'coverLetterResult'];
-            formIds.forEach(id = document.getElementById(id).value = '');
+            formIds.forEach(id => document.getElementById(id).value = '');
             document.getElementById('tone').value = 'Profesional';
             const statusIds = ['cv-status', 'keyPointsResult', 'analysisResult', 'headlinesResult'];
-            statusIds.forEach(id = {
+            statusIds.forEach(id => {
                 const el = document.getElementById(id);
                 el.textContent = '';
                 el.classList.add('hidden');
@@ -411,11 +411,11 @@ body class=bg-gray-50 text-gray-800
         }
 
 
-         --- Lógica de PDF ---
-        document.getElementById('cvFile').addEventListener('change', async (event) = {
+        // --- Lógica de PDF ---
+        document.getElementById('cvFile').addEventListener('change', async (event) => {
             const file = event.target.files[0];
             const statusEl = document.getElementById('cv-status');
-            if (!file  file.type !== 'applicationpdf') {
+            if (!file || file.type !== 'application/pdf') {
                 statusEl.textContent = uiStrings[currentLanguage].cv_select_pdf;
                 statusEl.className = 'text-sm text-red-600 mt-2 font-medium';
                 return;
@@ -430,49 +430,49 @@ body class=bg-gray-50 text-gray-800
                     const typedarray = new Uint8Array(this.result);
                     const pdf = await pdfjsLib.getDocument(typedarray).promise;
                     let textContent = '';
-                    for (let i = 1; i = pdf.numPages; i++) {
+                    for (let i = 1; i <= pdf.numPages; i++) {
                         const page = await pdf.getPage(i);
                         const text = await page.getTextContent();
-                        textContent += text.items.map(s = s.str).join(' ');
+                        textContent += text.items.map(s => s.str).join(' ');
                     }
                     formData.cvText = textContent;
                     statusEl.textContent = uiStrings[currentLanguage].cv_success;
                 };
                 fileReader.readAsArrayBuffer(file);
             } catch (error) {
-                console.error('Error processing PDF', error);
+                console.error('Error processing PDF:', error);
                 statusEl.textContent = uiStrings[currentLanguage].cv_error;
                 statusEl.className = 'text-sm text-red-600 mt-2 font-medium';
             }
         });
         
-         --- Funciones de IA ---
+        // --- Funciones de IA ---
         async function callGemini(prompt) {
-            let chatHistory = [{ role user, parts [{ text prompt }] }];
-            const payload = { contents chatHistory };
-            const apiKey = ;  Dejar en blanco
-            const apiUrl = `httpsgenerativelanguage.googleapis.comv1betamodelsgemini-2.0-flashgenerateContentkey=${apiKey}`;
+            let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+            const payload = { contents: chatHistory };
+            const apiKey = ""; // Dejar en blanco
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
             
             const response = await fetch(apiUrl, {
-                method 'POST',
-                headers { 'Content-Type' 'applicationjson' },
-                body JSON.stringify(payload)
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
             });
 
             if (!response.ok) {
                 const errorBody = await response.text();
-                throw new Error(`API Error ${response.statusText}. Body ${errorBody}`);
+                throw new Error(`API Error: ${response.statusText}. Body: ${errorBody}`);
             }
 
             const result = await response.json();
             
-            if (result.candidates && result.candidates.length  0 &&
+            if (result.candidates && result.candidates.length > 0 &&
                 result.candidates[0].content && result.candidates[0].content.parts &&
-                result.candidates[0].content.parts.length  0) {
+                result.candidates[0].content.parts.length > 0) {
                 return result.candidates[0].content.parts[0].text;
             } else {
-                console.log(Unexpected API response, result);
-                throw new Error(No valid content received from API.);
+                console.log("Unexpected API response:", result);
+                throw new Error("No valid content received from API.");
             }
         }
 
@@ -486,11 +486,11 @@ body class=bg-gray-50 text-gray-800
             resultDiv.innerHTML = uiStrings[currentLanguage].jd_analyzing;
             resultDiv.classList.remove('hidden');
 
-            const prompt = `Analyze the following job description and extract the 5 most important skills, qualifications, and responsibilities a candidate should address in their cover letter. Present the result as a bulleted list (using ''). The response must be in ${currentLanguage === 'es'  'Spanish'  'English'}. Job descriptionnn${jobDesc}`;
+            const prompt = `Analyze the following job description and extract the 5 most important skills, qualifications, and responsibilities a candidate should address in their cover letter. Present the result as a bulleted list (using '*'). The response must be in ${currentLanguage === 'es' ? 'Spanish' : 'English'}. Job description:\n\n${jobDesc}`;
 
             try {
                 const resultText = await callGemini(prompt);
-                resultDiv.innerHTML = resultText.replace(g, '•').replace(ng, 'br');
+                resultDiv.innerHTML = resultText.replace(/\*/g, '•').replace(/\n/g, '<br>');
             } catch (error) {
                 resultDiv.innerHTML = `${uiStrings[currentLanguage].error_prefix}${error.message}`;
             }
@@ -503,11 +503,11 @@ body class=bg-gray-50 text-gray-800
             resultDiv.innerHTML = uiStrings[currentLanguage].jd_analyzing;
             resultDiv.classList.remove('hidden');
 
-            const prompt = `Act as an expert HR consultant. Analyze the following cover letter and provide 3-4 concrete, actionable tips to improve it. Focus on clarity, impact, tone, and the strength of the call to action. Format your response as a list of points. The response must be in ${currentLanguage === 'es'  'Spanish'  'English'}. Letternn${coverLetter}`;
+            const prompt = `Act as an expert HR consultant. Analyze the following cover letter and provide 3-4 concrete, actionable tips to improve it. Focus on clarity, impact, tone, and the strength of the call to action. Format your response as a list of points. The response must be in ${currentLanguage === 'es' ? 'Spanish' : 'English'}. Letter:\n\n${coverLetter}`;
 
             try {
                 const resultText = await callGemini(prompt);
-                resultDiv.innerHTML = `${uiStrings[currentLanguage].analysis_title}${resultText.replace(g, '•').replace(ng, 'br')}`;
+                resultDiv.innerHTML = `${uiStrings[currentLanguage].analysis_title}${resultText.replace(/\*/g, '•').replace(/\n/g, '<br>')}`;
             } catch (error) {
                 resultDiv.innerHTML = `${uiStrings[currentLanguage].error_prefix}${error.message}`;
             }
@@ -516,16 +516,16 @@ body class=bg-gray-50 text-gray-800
         async function generateHeadlines() {
             const jobTitle = document.getElementById('jobTitle').value;
             const fullName = document.getElementById('fullName').value;
-            if (!jobTitle  !fullName) return;
+            if (!jobTitle || !fullName) return;
             const resultDiv = document.getElementById('headlinesResult');
             resultDiv.innerHTML = uiStrings[currentLanguage].jd_analyzing;
             resultDiv.classList.remove('hidden');
 
-            const prompt = `Generate 3 professional and high-impact email subject line suggestions for a job application for the position of ${jobTitle}. The candidate's name is ${fullName}. Format the response as a numbered list. The response must be in ${currentLanguage === 'es'  'Spanish'  'English'}.`;
+            const prompt = `Generate 3 professional and high-impact email subject line suggestions for a job application for the position of "${jobTitle}". The candidate's name is "${fullName}". Format the response as a numbered list. The response must be in ${currentLanguage === 'es' ? 'Spanish' : 'English'}.`;
             
             try {
                 const resultText = await callGemini(prompt);
-                resultDiv.innerHTML = `${uiStrings[currentLanguage].headlines_title}${resultText.replace(ng, 'br')}`;
+                resultDiv.innerHTML = `${uiStrings[currentLanguage].headlines_title}${resultText.replace(/\n/g, '<br>')}`;
             } catch (error) {
                 resultDiv.innerHTML = `${uiStrings[currentLanguage].error_prefix}${error.message}`;
             }
@@ -533,9 +533,9 @@ body class=bg-gray-50 text-gray-800
 
         async function generateCoverLetter() {
             const fields = ['fullName', 'contactInfo', 'companyName', 'hiringManager', 'jobTitle', 'jobUrl', 'jobDescription', 'strengths', 'experience', 'whyCompany', 'tone'];
-            fields.forEach(id = formData[id] = document.getElementById(id).value  formData[id]);
+            fields.forEach(id => formData[id] = document.getElementById(id)?.value || formData[id]);
 
-            if (!formData.jobTitle  !formData.jobDescription) {
+            if (!formData.jobTitle || !formData.jobDescription) {
                 alert(uiStrings[currentLanguage].jd_alert);
                 return;
             }
@@ -545,29 +545,29 @@ body class=bg-gray-50 text-gray-800
             updateStepIndicator(4);
 
             const prompt = `
-                You are an expert HR copywriter. Generate a professional cover letter in ${currentLanguage === 'es'  'Spanish'  'English'} based on this information.
-                Candidate ${formData.fullName} (${formData.contactInfo})
-                Company ${formData.companyName}
-                Recipient ${formData.hiringManager  `Hiring Team at ${formData.companyName}`}
-                Position ${formData.jobTitle}
-                Job URL (for context) ${formData.jobUrl}
-                Job Descriptionn${formData.jobDescription}
-                CV Summaryn${formData.cvText  'CV not provided.'}
-                Key Strengthsn${formData.strengths}
-                Key Achievementsn${formData.experience}
-                Interest in Companyn${formData.whyCompany}
-                Tone ${formData.tone}
-                Final Instructions (VERY IMPORTANT)
+                You are an expert HR copywriter. Generate a professional cover letter in ${currentLanguage === 'es' ? 'Spanish' : 'English'} based on this information.
+                **Candidate:** ${formData.fullName} (${formData.contactInfo})
+                **Company:** ${formData.companyName}
+                **Recipient:** ${formData.hiringManager || `Hiring Team at ${formData.companyName}`}
+                **Position:** ${formData.jobTitle}
+                **Job URL (for context):** ${formData.jobUrl}
+                **Job Description:**\n${formData.jobDescription}
+                **CV Summary:**\n${formData.cvText || 'CV not provided.'}
+                **Key Strengths:**\n${formData.strengths}
+                **Key Achievements:**\n${formData.experience}
+                **Interest in Company:**\n${formData.whyCompany}
+                **Tone:** ${formData.tone}
+                **Final Instructions (VERY IMPORTANT):**
                 1. Write a complete, well-structured cover letter with a professional format.
                 2. Connect the candidate's experience and skills to the job requirements.
-                3. The final output must be ONLY the text of the letter. DO NOT include any introductory phrases like Sure, here is your letter. The text must be ready to be used directly.
+                3. The final output must be ONLY the text of the letter. DO NOT include any introductory phrases like "Sure, here is your letter". The text must be ready to be used directly.
             `;
 
             try {
                 const generatedText = await callGemini(prompt);
                 document.getElementById('coverLetterResult').value = generatedText;
             } catch (error) {
-                console.error('Error generating cover letter', error);
+                console.error('Error generating cover letter:', error);
                 document.getElementById('coverLetterResult').value = `${uiStrings[currentLanguage].error_prefix}${error.message}.`;
             } finally {
                 document.getElementById('loading').classList.add('hidden');
@@ -575,7 +575,7 @@ body class=bg-gray-50 text-gray-800
             }
         }
 
-         --- Acciones de Resultado ---
+        // --- Acciones de Resultado ---
         function copyToClipboard() {
             const textarea = document.getElementById('coverLetterResult');
             textarea.select();
@@ -589,21 +589,21 @@ body class=bg-gray-50 text-gray-800
 
         function exportToPDF() {
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({ orientation 'p', unit 'mm', format 'a4' });
+            const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
             const text = document.getElementById('coverLetterResult').value;
-            const fullName = document.getElementById('fullName').value  'candidate';
+            const fullName = document.getElementById('fullName').value || 'candidate';
             const pageHeight = doc.internal.pageSize.getHeight();
             const pageWidth = doc.internal.pageSize.getWidth();
             const margin = 20;
             const lineHeight = 7;
             
-            doc.setFont(Helvetica, normal);
+            doc.setFont("Helvetica", "normal");
             doc.setFontSize(11);
 
-            const lines = doc.splitTextToSize(text, pageWidth - margin  2);
+            const lines = doc.splitTextToSize(text, pageWidth - margin * 2);
             let y = margin;
-            lines.forEach(line = {
-                if (y + lineHeight  pageHeight - margin) {
+            lines.forEach(line => {
+                if (y + lineHeight > pageHeight - margin) {
                     doc.addPage();
                     y = margin;
                 }
@@ -611,12 +611,12 @@ body class=bg-gray-50 text-gray-800
                 y += lineHeight;
             });
 
-            doc.save(`Cover_Letter_${fullName.replace(sg, '_')}.pdf`);
+            doc.save(`Cover_Letter_${fullName.replace(/\s/g, '_')}.pdf`);
         }
         
-         Iniciar la app
+        // Iniciar la app
         setLanguage('es');
         updateStepIndicator(1);
-    script
-body
-html
+    </script>
+</body>
+</html>
