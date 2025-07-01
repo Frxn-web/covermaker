@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Cartas de Presentación IA (v5.4)</title>
+    <title>Generador de Cartas de Presentación IA (v5.5)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
@@ -204,8 +204,8 @@
     </div>
 
     <script>
-    // --- V5.4 ---
-    // Añadida extracción de datos desde CV y notificaciones en lugar de alertas.
+    // --- V5.5 ---
+    // Corregido guardado/carga de datos personales en perfiles y robustez en parseo de JSON de la IA.
     
     // --- Estado y Configuración ---
     let currentStep = 1;
@@ -442,7 +442,7 @@
             appData = JSON.parse(savedData);
         }
         if (!appData.profiles || Object.keys(appData.profiles).length === 0) {
-            appData.profiles = { 'Default': { strengths: '', experience: '' } };
+            appData.profiles = { 'Default': { fullName: '', contactInfo: '', strengths: '', experience: '' } };
         }
         if(!appData.history) appData.history = [];
 
@@ -454,7 +454,10 @@
     function saveProfile() {
         const profileName = document.getElementById('new-profile-name').value.trim() || document.getElementById('profile-selector').value;
         if (!profileName) return;
+        // CORRECCIÓN: Guardar también los datos personales en el perfil
         appData.profiles[profileName] = {
+            fullName: document.getElementById('fullName').value,
+            contactInfo: document.getElementById('contactInfo').value,
             strengths: document.getElementById('strengths').value,
             experience: document.getElementById('experience').value
         };
@@ -467,8 +470,11 @@
     function loadProfile(profileName) {
         const profile = appData.profiles[profileName];
         if (profile) {
-            document.getElementById('strengths').value = profile.strengths;
-            document.getElementById('experience').value = profile.experience;
+            // CORRECCIÓN: Cargar también los datos personales del perfil
+            document.getElementById('fullName').value = profile.fullName || '';
+            document.getElementById('contactInfo').value = profile.contactInfo || '';
+            document.getElementById('strengths').value = profile.strengths || '';
+            document.getElementById('experience').value = profile.experience || '';
         }
     }
 
@@ -610,11 +616,17 @@
         hideNotification(3);
         const resultDiv = document.getElementById('cvExtractResult');
 
-        const prompt = `Act as an HR expert. Read the following CV text and extract the candidate's key strengths and quantifiable achievements. Format the output as a JSON object with two keys: "strengths" (a string summarizing top skills) and "achievements" (a string summarizing key results, preferably with numbers). The response must be in ${currentLanguage === 'es' ? 'Spanish' : 'English'}. CV Text: \n\n${cvText}`;
+        // CORRECCIÓN: Prompt más estricto para que devuelva solo el JSON.
+        const prompt = `Act as an HR expert. Read the following CV text and extract the candidate's key strengths and quantifiable achievements. YOU MUST RESPOND ONLY WITH A VALID JSON OBJECT, with no extra text or markdown. The JSON object must have two keys: "strengths" (a string summarizing top skills) and "achievements" (a string summarizing key results, preferably with numbers). The response must be in ${currentLanguage === 'es' ? 'Spanish' : 'English'}. CV Text: \n\n${cvText}`;
 
         try {
             const resultText = await callGemini(prompt, 'cvExtractResult');
-            const resultJson = JSON.parse(resultText.replace(/```json\n?/, '').replace(/```$/, ''));
+            // CORRECCIÓN: Lógica de parseo más robusta para encontrar el JSON.
+            const jsonMatch = resultText.match(/\{[\s\S]*\}/);
+            if (!jsonMatch) {
+                throw new Error("No valid JSON object found in the AI response.");
+            }
+            const resultJson = JSON.parse(jsonMatch[0]);
             document.getElementById('strengths').value = resultJson.strengths || '';
             document.getElementById('experience').value = resultJson.achievements || '';
             resultDiv.textContent = uiStrings[currentLanguage].cv_extract_success;
