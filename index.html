@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Cartas de Presentación IA (v5.5)</title>
+    <title>Generador de Cartas de Presentación IA (v5.6)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
@@ -60,7 +60,8 @@
                             <div>
                                 <h3 class="text-lg font-semibold mb-3 text-indigo-700" data-lang-key="your_data">Tus Datos</h3>
                                 <input id="fullName" type="text" data-lang-key-placeholder="placeholder_fullName" placeholder="Tu Nombre Completo" class="w-full p-3 border border-gray-300 rounded-lg mb-4">
-                                <input id="contactInfo" type="text" data-lang-key-placeholder="placeholder_contactInfo" placeholder="Email, Teléfono, LinkedIn (URL)" class="w-full p-3 border border-gray-300 rounded-lg">
+                                <input id="userAddress" type="text" data-lang-key-placeholder="placeholder_userAddress" placeholder="Tu Dirección (Calle, Ciudad)" class="w-full p-3 border border-gray-300 rounded-lg mb-4">
+                                <input id="contactInfo" type="text" data-lang-key-placeholder="placeholder_contactInfo" placeholder="Email, Teléfono" class="w-full p-3 border border-gray-300 rounded-lg">
                             </div>
                             <div>
                                 <h3 class="text-lg font-semibold mb-3 text-indigo-700" data-lang-key="profiles_title">Perfiles</h3>
@@ -77,19 +78,33 @@
                     <div id="step-2" class="bg-white p-6 sm:p-8 rounded-xl shadow-lg hidden">
                         <div id="notification-2" class="notification hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-lg"></div>
                         <h2 class="text-2xl font-bold mb-6" data-lang-key="step2_title">Paso 2: La Oferta de Trabajo</h2>
-                        <div class="mb-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="letterDate" class="block text-sm font-medium text-gray-700" data-lang-key="date_label">Fecha de la Carta</label>
+                                <input id="letterDate" type="date" class="w-full p-3 border border-gray-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label for="hiringManagerName" class="block text-sm font-medium text-gray-700" data-lang-key="manager_name_label">Nombre del Destinatario (Opcional)</label>
+                                <input id="hiringManagerName" type="text" class="w-full p-3 border border-gray-300 rounded-lg">
+                            </div>
+                             <div>
+                                <label for="companyName" class="block text-sm font-medium text-gray-700" data-lang-key="company_data">Nombre de la Empresa</label>
+                                <input id="companyName" type="text" class="w-full p-3 border border-gray-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label for="companyAddress" class="block text-sm font-medium text-gray-700" data-lang-key="company_address_label">Dirección de la Empresa (Opcional)</label>
+                                <input id="companyAddress" type="text" class="w-full p-3 border border-gray-300 rounded-lg">
+                            </div>
+                        </div>
+                         <div class="mt-6">
                             <label for="jobTitle" class="block text-lg font-semibold mb-2" data-lang-key="job_title_label">Puesto al que Aplicas</label>
                             <input id="jobTitle" type="text" class="w-full p-3 border border-gray-300 rounded-lg">
                         </div>
-                        <div class="mb-6">
-                            <label for="companyName" class="block text-lg font-semibold mb-2" data-lang-key="company_data">Nombre de la Empresa</label>
-                            <input id="companyName" type="text" class="w-full p-3 border border-gray-300 rounded-lg">
-                        </div>
-                        <div class="mb-6">
+                        <div class="mt-6">
                             <label for="jobDescription" class="block text-lg font-semibold mb-2" data-lang-key="job_desc_label">Descripción del Puesto</label>
-                            <textarea id="jobDescription" rows="6" class="w-full p-3 border border-gray-300 rounded-lg"></textarea>
+                            <textarea id="jobDescription" rows="5" class="w-full p-3 border border-gray-300 rounded-lg"></textarea>
                         </div>
-                        <div class="mb-6">
+                        <div class="mt-6">
                             <label for="cvFile" class="block text-lg font-semibold mb-2" data-lang-key="upload_cv_label">Sube tu CV (PDF)</label>
                             <input type="file" id="cvFile" accept=".pdf" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
                             <p id="cv-status" class="text-sm text-green-600 mt-2 font-medium"></p>
@@ -170,6 +185,7 @@
                         <div class="mt-6 flex flex-col sm:flex-row gap-4">
                             <button onclick="copyToClipboard()" class="w-full sm:w-auto flex-1 bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg" data-lang-key="copy_button">Copiar</button>
                             <button onclick="exportToPDF()" class="w-full sm:w-auto flex-1 bg-red-600 text-white font-bold py-3 px-6 rounded-lg" data-lang-key="export_button">Exportar PDF</button>
+                            <button onclick="rewriteLetter()" class="w-full sm:w-auto flex-1 bg-green-600 text-white font-bold py-3 px-6 rounded-lg" data-lang-key="rewrite_button">✨ Reescribir</button>
                         </div>
                         <div class="mt-6 text-center">
                            <button onclick="startOver()" class="text-indigo-600 hover:text-indigo-800 font-semibold" data-lang-key="start_over_button">Crear Nueva Carta</button>
@@ -204,8 +220,8 @@
     </div>
 
     <script>
-    // --- V5.5 ---
-    // Corregido guardado/carga de datos personales en perfiles y robustez en parseo de JSON de la IA.
+    // --- V5.6 ---
+    // Añadido botón de reescritura, campos de datos adicionales y notificaciones mejoradas.
     
     // --- Estado y Configuración ---
     let currentStep = 1;
@@ -226,12 +242,16 @@
             your_data: "Tus Datos",
             profiles_title: "Perfiles",
             placeholder_fullName: "Tu Nombre Completo",
-            placeholder_contactInfo: "Email, Teléfono, LinkedIn (URL)",
+            placeholder_userAddress: "Tu Dirección (Calle, Ciudad)",
+            placeholder_contactInfo: "Email, Teléfono",
             placeholder_new_profile: "Nombre del nuevo perfil...",
             save_profile_button: "Guardar/Actualizar Perfil",
             next_button: "Siguiente",
             prev_button: "Anterior",
             step2_title: "Paso 2: La Oferta de Trabajo",
+            date_label: "Fecha de la Carta",
+            manager_name_label: "Nombre del Destinatario (Opcional)",
+            company_address_label: "Dirección de la Empresa (Opcional)",
             job_title_label: "Puesto al que Aplicas",
             company_data: "Nombre de la Empresa",
             job_desc_label: "Descripción del Puesto",
@@ -252,6 +272,7 @@
             step4_title: "¡Tu Carta de Presentación está Lista!",
             copy_button: "Copiar",
             export_button: "Exportar PDF",
+            rewrite_button: "✨ Reescribir",
             start_over_button: "Crear Nueva Carta",
             history_title: "Historial de Cartas",
             ad_title: "Publicidad",
@@ -262,7 +283,7 @@
             cv_select_pdf: "Selecciona un archivo PDF.",
             cv_extract_error: "Sube tu CV primero para usar esta función.",
             cv_extract_success: "Datos extraídos. Por favor, revísalos y ajústalos si es necesario.",
-            validation_error_step1: "Por favor, introduce tu nombre completo.",
+            validation_error_step1: "Por favor, introduce tu nombre completo y dirección.",
             validation_error_step2: "Por favor, completa el título del puesto y la descripción.",
             error_prefix: "Error: ",
             copied_alert: "¡Texto copiado!",
@@ -271,7 +292,8 @@
             no_history: "Aún no has generado ninguna carta.",
             load_history_item: "Cargar",
             delete_history_item: "Borrar",
-            confirm_delete: "¿Seguro que quieres borrar este elemento?"
+            confirm_delete: "¿Seguro que quieres borrar este elemento?",
+            rewriting_letter: "Reescribiendo tu carta..."
         },
         en: {
             main_title: "AI Career Assistant",
@@ -280,12 +302,16 @@
             your_data: "Your Details",
             profiles_title: "Profiles",
             placeholder_fullName: "Your Full Name",
-            placeholder_contactInfo: "Email, Phone, LinkedIn (URL)",
+            placeholder_userAddress: "Your Address (Street, City)",
+            placeholder_contactInfo: "Email, Phone",
             placeholder_new_profile: "New profile name...",
             save_profile_button: "Save/Update Profile",
             next_button: "Next",
             prev_button: "Previous",
             step2_title: "Step 2: The Job Offer",
+            date_label: "Letter Date",
+            manager_name_label: "Recipient's Name (Optional)",
+            company_address_label: "Company's Address (Optional)",
             job_title_label: "Job Title You're Applying For",
             company_data: "Company Name",
             job_desc_label: "Job Description",
@@ -306,6 +332,7 @@
             step4_title: "Your Cover Letter is Ready!",
             copy_button: "Copy",
             export_button: "Export PDF",
+            rewrite_button: "✨ Rewrite",
             start_over_button: "Create New Letter",
             history_title: "Letter History",
             ad_title: "Advertisement",
@@ -316,7 +343,7 @@
             cv_select_pdf: "Please select a PDF file.",
             cv_extract_error: "Upload your CV first to use this feature.",
             cv_extract_success: "Data extracted. Please review and adjust if necessary.",
-            validation_error_step1: "Please enter your full name.",
+            validation_error_step1: "Please enter your full name and address.",
             validation_error_step2: "Please complete the job title and description.",
             error_prefix: "Error: ",
             copied_alert: "Text copied!",
@@ -325,7 +352,8 @@
             no_history: "You haven't generated any letters yet.",
             load_history_item: "Load",
             delete_history_item: "Delete",
-            confirm_delete: "Are you sure you want to delete this item?"
+            confirm_delete: "Are you sure you want to delete this item?",
+            rewriting_letter: "Rewriting your letter..."
         }
     };
 
@@ -369,7 +397,7 @@
         let errorMessage = '';
 
         if (currentStep === 1) {
-            if (!document.getElementById('fullName').value.trim()) {
+            if (!document.getElementById('fullName').value.trim() || !document.getElementById('userAddress').value.trim()) {
                 isValid = false;
                 errorMessage = uiStrings[currentLanguage].validation_error_step1;
             }
@@ -419,11 +447,12 @@
 
     function startOver() {
         appData.currentInputs = {};
-        const fields = ['fullName', 'contactInfo', 'jobTitle', 'companyName', 'jobDescription', 'strengths', 'experience', 'whyCompany', 'coverLetterResult', 'cvFile'];
+        const fields = ['fullName', 'userAddress', 'contactInfo', 'jobTitle', 'companyName', 'companyAddress', 'hiringManagerName', 'jobDescription', 'strengths', 'experience', 'whyCompany', 'coverLetterResult', 'cvFile'];
         fields.forEach(id => {
             const el = document.getElementById(id);
             if(el) el.value = '';
         });
+        document.getElementById('letterDate').value = getTodaysDate();
         document.getElementById('cv-status').textContent = '';
         hideNotification(1);
         hideNotification(2);
@@ -442,7 +471,7 @@
             appData = JSON.parse(savedData);
         }
         if (!appData.profiles || Object.keys(appData.profiles).length === 0) {
-            appData.profiles = { 'Default': { fullName: '', contactInfo: '', strengths: '', experience: '' } };
+            appData.profiles = { 'Default': { fullName: '', userAddress: '', contactInfo: '', strengths: '', experience: '' } };
         }
         if(!appData.history) appData.history = [];
 
@@ -454,9 +483,9 @@
     function saveProfile() {
         const profileName = document.getElementById('new-profile-name').value.trim() || document.getElementById('profile-selector').value;
         if (!profileName) return;
-        // CORRECCIÓN: Guardar también los datos personales en el perfil
         appData.profiles[profileName] = {
             fullName: document.getElementById('fullName').value,
+            userAddress: document.getElementById('userAddress').value,
             contactInfo: document.getElementById('contactInfo').value,
             strengths: document.getElementById('strengths').value,
             experience: document.getElementById('experience').value
@@ -470,8 +499,8 @@
     function loadProfile(profileName) {
         const profile = appData.profiles[profileName];
         if (profile) {
-            // CORRECCIÓN: Cargar también los datos personales del perfil
             document.getElementById('fullName').value = profile.fullName || '';
+            document.getElementById('userAddress').value = profile.userAddress || '';
             document.getElementById('contactInfo').value = profile.contactInfo || '';
             document.getElementById('strengths').value = profile.strengths || '';
             document.getElementById('experience').value = profile.experience || '';
@@ -533,14 +562,19 @@
         const item = appData.history[index];
         if (item) {
             startOver();
-            document.getElementById('fullName').value = item.inputs.fullName;
-            document.getElementById('contactInfo').value = item.inputs.contactInfo;
-            document.getElementById('jobTitle').value = item.jobTitle;
-            document.getElementById('companyName').value = item.companyName;
-            document.getElementById('jobDescription').value = item.inputs.jobDescription;
-            document.getElementById('strengths').value = item.inputs.strengths;
-            document.getElementById('experience').value = item.inputs.experience;
-            document.getElementById('whyCompany').value = item.inputs.whyCompany;
+            const inputs = item.inputs;
+            document.getElementById('fullName').value = inputs.fullName;
+            document.getElementById('userAddress').value = inputs.userAddress;
+            document.getElementById('contactInfo').value = inputs.contactInfo;
+            document.getElementById('letterDate').value = inputs.letterDate;
+            document.getElementById('hiringManagerName').value = inputs.hiringManagerName;
+            document.getElementById('companyName').value = inputs.companyName;
+            document.getElementById('companyAddress').value = inputs.companyAddress;
+            document.getElementById('jobTitle').value = inputs.jobTitle;
+            document.getElementById('jobDescription').value = inputs.jobDescription;
+            document.getElementById('strengths').value = inputs.strengths;
+            document.getElementById('experience').value = inputs.experience;
+            document.getElementById('whyCompany').value = inputs.whyCompany;
             document.getElementById('coverLetterResult').value = item.letter;
             showStep(4);
         }
@@ -616,12 +650,10 @@
         hideNotification(3);
         const resultDiv = document.getElementById('cvExtractResult');
 
-        // CORRECCIÓN: Prompt más estricto para que devuelva solo el JSON.
         const prompt = `Act as an HR expert. Read the following CV text and extract the candidate's key strengths and quantifiable achievements. YOU MUST RESPOND ONLY WITH A VALID JSON OBJECT, with no extra text or markdown. The JSON object must have two keys: "strengths" (a string summarizing top skills) and "achievements" (a string summarizing key results, preferably with numbers). The response must be in ${currentLanguage === 'es' ? 'Spanish' : 'English'}. CV Text: \n\n${cvText}`;
 
         try {
             const resultText = await callGemini(prompt, 'cvExtractResult');
-            // CORRECCIÓN: Lógica de parseo más robusta para encontrar el JSON.
             const jsonMatch = resultText.match(/\{[\s\S]*\}/);
             if (!jsonMatch) {
                 throw new Error("No valid JSON object found in the AI response.");
@@ -635,12 +667,16 @@
         }
     }
 
-    async function generateCoverLetter() {
+    async function generateCoverLetter(isRewrite = false) {
         const inputs = {
             fullName: document.getElementById('fullName').value,
+            userAddress: document.getElementById('userAddress').value,
             contactInfo: document.getElementById('contactInfo').value,
-            jobTitle: document.getElementById('jobTitle').value,
+            letterDate: document.getElementById('letterDate').value,
+            hiringManagerName: document.getElementById('hiringManagerName').value,
             companyName: document.getElementById('companyName').value,
+            companyAddress: document.getElementById('companyAddress').value,
+            jobTitle: document.getElementById('jobTitle').value,
             jobDescription: document.getElementById('jobDescription').value,
             strengths: document.getElementById('strengths').value,
             experience: document.getElementById('experience').value,
@@ -652,21 +688,32 @@
         };
         appData.currentInputs = {...appData.currentInputs, ...inputs};
 
-        if (!inputs.jobTitle || !inputs.jobDescription) {
+        if (!isRewrite && (!inputs.jobTitle || !inputs.jobDescription)) {
             showNotification(3, uiStrings[currentLanguage].validation_error_step2);
             return;
         }
         hideNotification(3);
 
-        document.getElementById('step-3').classList.add('hidden');
+        document.getElementById(`step-${currentStep}`).classList.add('hidden');
         document.getElementById('loading').classList.remove('hidden');
+        document.getElementById('loading-text').textContent = isRewrite ? uiStrings[currentLanguage].rewriting_letter : uiStrings[currentLanguage].loading_text;
         updateStepIndicator(4);
 
-        const prompt = `
-            Generate a cover letter in ${currentLanguage === 'es' ? 'Spanish' : 'English'}.
-            Info:
-            - Candidate: ${inputs.fullName} (${inputs.contactInfo})
-            - Company: ${inputs.companyName}
+        const prompt = isRewrite 
+        ? `You are an expert editor. Rewrite the following cover letter to offer a fresh perspective. Change the sentence structure and vocabulary while keeping the core message and professional tone. Respond ONLY with the rewritten letter text. The response must be in ${currentLanguage === 'es' ? 'Spanish' : 'English'}.\n\nORIGINAL LETTER:\n${document.getElementById('coverLetterResult').value}`
+        : `
+            Generate a cover letter in ${currentLanguage === 'es' ? 'Spanish' : 'English'} using a standard professional format.
+            
+            Header Information:
+            - Candidate Name: ${inputs.fullName}
+            - Candidate Address: ${inputs.userAddress}
+            - Candidate Contact: ${inputs.contactInfo}
+            - Date: ${inputs.letterDate}
+            - Recipient Name: ${inputs.hiringManagerName || `Hiring Team`}
+            - Company Name: ${inputs.companyName}
+            - Company Address: ${inputs.companyAddress}
+
+            Content Information:
             - Position: ${inputs.jobTitle}
             - Job Description: ${inputs.jobDescription}
             - CV Summary: ${inputs.cvText}
@@ -674,30 +721,36 @@
             - Achievements: ${inputs.experience}
             - Motivation: ${inputs.whyCompany}
             - Tone - Formality: ${inputs.formality}%, Confidence: ${inputs.confidence}%, Detail: ${inputs.detail}%.
-            Instructions: Write ONLY the letter text, ready to use.
+
+            Instructions: Construct the letter with a proper header and salutation. Write ONLY the letter text, ready to use.
         `;
 
         try {
             const letterText = await callGemini(prompt, null);
             document.getElementById('coverLetterResult').value = letterText;
             
-            const historyItem = {
-                jobTitle: inputs.jobTitle,
-                companyName: inputs.companyName,
-                date: new Date().toISOString(),
-                letter: letterText,
-                inputs: appData.currentInputs
-            };
-            addToHistory(historyItem);
-
+            if (!isRewrite) {
+                const historyItem = {
+                    jobTitle: inputs.jobTitle,
+                    companyName: inputs.companyName,
+                    date: new Date().toISOString(),
+                    letter: letterText,
+                    inputs: appData.currentInputs
+                };
+                addToHistory(historyItem);
+            }
             showStep(4);
         } catch (e) {
-            console.error("Error generating cover letter:", e);
+            console.error("Error during AI generation:", e);
             showNotification(3, `${uiStrings[currentLanguage].error_prefix}${e.message}`);
             showStep(3);
         } finally {
             document.getElementById('loading').classList.add('hidden');
         }
+    }
+    
+    function rewriteLetter() {
+        generateCoverLetter(true);
     }
 
     // --- Acciones de Resultado ---
@@ -732,12 +785,21 @@
         doc.save(`Cover_Letter_${fullName.replace(/\s/g, '_')}.pdf`);
     }
 
+    function getTodaysDate() {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+    }
+
     // --- Inicialización ---
     document.querySelectorAll('input[type="range"]').forEach(slider => {
         const valueSpan = document.getElementById(`${slider.id}-value`);
         slider.addEventListener('input', () => valueSpan.textContent = `${slider.value}%`);
     });
 
+    document.getElementById('letterDate').value = getTodaysDate();
     loadState();
     setLanguage('es');
     showStep(1);
